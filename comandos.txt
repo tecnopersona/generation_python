@@ -1,0 +1,3 @@
+python -V
+pip list
+pip install django
