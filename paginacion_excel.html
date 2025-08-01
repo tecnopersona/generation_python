@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Paginación desde Excel</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    table {
+      width: 80%;
+      border-collapse: collapse;
+      margin: 20px auto;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    .pagination, .file-input {
+      text-align: center;
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2 style="text-align:center;">Paginación desde archivo Excel</h2>
+
+  <div class="file-input">
+    <label for="excel-file">Selecciona un archivo Excel (.xlsx):</label>
+    <input type="file" id="excel-file" accept=".xlsx" />
+  </div>
+
+  <table>
+    <thead id="table-head"></thead>
+    <tbody id="table-body"></tbody>
+  </table>
+
+  <div class="pagination">
+    <button onclick="prevPage()">⏪ Anterior</button>
+    <span id="page-number">Página 1</span>
+    <button onclick="nextPage()">Siguiente ⏩</button>
+  </div>
+
+  <script>
+    let data = [];
+    let currentPage = 1;
+    const rowsPerPage = 10;
+
+    document.getElementById('excel-file').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        const workbook = XLSX.read(event.target.result, { type: 'binary' });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        data = XLSX.utils.sheet_to_json(sheet);
+
+        currentPage = 1;
+        renderTable();
+      };
+
+      reader.readAsBinaryString(file);
+    });
+
+    function displayPage(data, page, rowsPerPage) {
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+      return data.slice(start, end);
+    }
+
+    function renderTable() {
+      const tableHead = document.getElementById("table-head");
+      const tableBody = document.getElementById("table-body");
+
+      if (data.length === 0) {
+        tableHead.innerHTML = "<tr><th>No hay datos</th></tr>";
+        tableBody.innerHTML = "";
+        return;
+      }
+
+      const headers = Object.keys(data[0]);
+      tableHead.innerHTML = "<tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
+
+      const paginatedData = displayPage(data, currentPage, rowsPerPage);
+      tableBody.innerHTML = paginatedData.map(row => {
+        return "<tr>" + headers.map(h => `<td>${row[h] ?? ''}</td>`).join("") + "</tr>";
+      }).join("");
+
+      document.getElementById("page-number").textContent = `Página ${currentPage}`;
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderTable();
+      }
+    }
+
+    function nextPage() {
+      if (currentPage * rowsPerPage < data.length) {
+        currentPage++;
+        renderTable();
+      }
+    }
+  </script>
+
+</body>
+</html>

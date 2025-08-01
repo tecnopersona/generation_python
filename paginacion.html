@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Paginación en JavaScript</title>
+  <style>
+    table {
+      width: 50%;
+      border-collapse: collapse;
+      margin: 20px auto;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    .pagination {
+      text-align: center;
+      margin: 10px;
+    }
+    button {
+      margin: 0 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2 style="text-align:center;">Ejemplo de Paginación en JavaScript</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+      </tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+  </table>
+
+  <div class="pagination">
+    <button onclick="prevPage()">⏪ Anterior</button>
+    <span id="page-number">Página 1</span>
+    <button onclick="nextPage()">Siguiente ⏩</button>
+  </div>
+
+  <script>
+    const data = [
+      { id: 1, name: "Juan" },
+      { id: 2, name: "María" },
+      { id: 3, name: "Pedro" },
+      { id: 4, name: "Ana" },
+      { id: 5, name: "Luis" },
+      { id: 6, name: "Sofía" },
+      { id: 7, name: "Carlos" },
+      { id: 8, name: "Laura" },
+      { id: 9, name: "Mateo" },
+      { id: 10, name: "Valentina" }
+    ];
+
+    let currentPage = 1;
+    const rowsPerPage = 3;
+
+    function displayPage(data, page, rowsPerPage) {
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+      return data.slice(start, end);
+    }
+
+    function renderTable() {
+      const tableBody = document.getElementById("table-body");
+      const paginatedData = displayPage(data, currentPage, rowsPerPage);
+      tableBody.innerHTML = "";
+
+      paginatedData.forEach(item => {
+        const row = `<tr><td>${item.id}</td><td>${item.name}</td></tr>`;
+        tableBody.innerHTML += row;
+      });
+
+      document.getElementById("page-number").textContent = `Página ${currentPage}`;
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        renderTable();
+      }
+    }
+
+    function nextPage() {
+      if (currentPage * rowsPerPage < data.length) {
+        currentPage++;
+        renderTable();
+      }
+    }
+
+    // Inicializar
+    renderTable();
+  </script>
+
+</body>
+</html>
