@@ -1,3 +1,23 @@
 python -V
 pip list
 pip install django
+
+-- crear entorno virtual
+python -m venv env
+
+-- activar le entorno
+env\Scripts\activate --win
+source env/bin/activate --mac/linux
+
+-- crear proyecto
+django-admin startproject nombre_proyecto
+
+
+-- accedemos al proyecto
+cd nombre_proyecto
+
+-- *instalar las dependencias a partir del archivo requirements.txt 
+pip install -r requirements.txt 
+
+-- creamos una aplicación dentro del proyecto
+python manage.py startapp login
