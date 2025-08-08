@@ -6,11 +6,19 @@ pip install django
 python -m venv env
 
 -- activar le entorno
-env\Scripts\activate --win
+mientorno\Scripts\activate --win (cmd)
+
+
+source entornovirtual/Scripts/activate  (bash)
+
+
 source env/bin/activate --mac/linux
 
+Instalar dependencias
+
+
 -- crear proyecto
-django-admin startproject nombre_proyecto
+django-admin startproject portafolio
 
 
 -- accedemos al proyecto
